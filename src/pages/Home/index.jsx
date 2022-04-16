@@ -1,35 +1,31 @@
 import * as S from './styles'
+import { APIKey } from '../../config/key'
+import { useState, useEffect } from 'react'
 
 function Home() {
-  const movies = [
-    {
-      title: 'The Batman',
-      image_url:
-        'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRBkxgl2A2PhE_6tklFLT0bxn5NLhvhsnpXGhmXBt_zotrlVHmo'
-    },
-    {
-      title: 'The Batman',
-      image_url:
-        'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRBkxgl2A2PhE_6tklFLT0bxn5NLhvhsnpXGhmXBt_zotrlVHmo'
-    },
-    {
-      title: 'The Batman',
-      image_url:
-        'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRBkxgl2A2PhE_6tklFLT0bxn5NLhvhsnpXGhmXBt_zotrlVHmo'
-    }
-  ]
+  const imgUrl = 'https://image.tmdb.org/t/p/w500'
+
+  const [movies, setMovies] = useState([])
+
+  useEffect(() => {
+    fetch(
+      `https://api.themoviedb.org/3/movie/popular?api_key=${APIKey}&language=en-US&page=1`
+    )
+      .then((response) => response.json())
+      .then((data) => setMovies(data.results))
+  }, [])
 
   return (
     <S.Container>
       <h1>Movies</h1>
       <S.MovieList>
-        {movies.map((movies) => {
+        {movies.map((movie) => {
           return (
-            <S.Movie key={movies.title}>
-              <a href="https://google.com.br">
-                <img src={movies.image_url} alt={movies.title} />
+            <S.Movie key={movie.id}>
+              <a href="#">
+                <img src={`${imgUrl}${movie.poster_path}`} alt={movie.title} />
               </a>
-              <span>{movies.title}</span>
+              <span>{movie.title}</span>
             </S.Movie>
           )
         })}
